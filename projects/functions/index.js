@@ -52,17 +52,17 @@ console.log(returnFirstArgument('ls'));
  Пример:
    returnFnResult(() => 'привет') вернет 'привет'
  */
-function returnFnResult() {
-  const value = Math.random();
-  function fn() {
-  return value;
-    }
-    
+
+   function returnFnResult (fn) {
     return fn();
   }
-  const result = returnFnResult(); 
+  
+  const result = returnFnResult (function fn (){
+    return 'hello';
+  });
   
   console.log(result);
+  
 
 /*
  Задание 4:
