@@ -6,5 +6,11 @@ const pagesMap = {
 
 export default {
   openPage(name) {
+    const selector = pagesMap[name];
+    const element = document.querySelector(selector);
+
+    currentPage?.classList.add('hidden');
+    currentPage = element;
+    currentPage.classList.remove('hidden');
   },
 };

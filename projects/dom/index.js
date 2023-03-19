@@ -10,9 +10,11 @@
  Пример:
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
-function createDivWithText(text) {
-}
-
+   function createDivWithText(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div
+} 
 /*
  Задание 2:
 
@@ -21,7 +23,15 @@ function createDivWithText(text) {
  Пример:
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
-function prepend(what, where) {
+   function prepend(what, where) {
+
+    /*const secondElement = document.createElement ('span');
+    secondElement = where; 
+
+    const firstElement = document.createElement ('div');
+    firstElement= what;*/
+    return where.prepend(what);
+
 }
 
 /*
@@ -43,8 +53,9 @@ function prepend(what, where) {
 
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
-function findAllPSiblings(where) {
-}
+   function findAllPSiblings(where) {
+    return [...where.children].filter((elem) => elem.nextElementSibling?.tagName === 'P');
+  }
 
 /*
  Задание 4:
@@ -66,7 +77,7 @@ function findAllPSiblings(where) {
 function findError(where) {
   const result = [];
 
-  for (const child of where.childNodes) {
+  for (const child of where.children) {
     result.push(child.textContent);
   }
 
@@ -85,8 +96,16 @@ function findError(where) {
    После выполнения функции, дерево <div></div>привет<p></p>loftchool!!!
    должно быть преобразовано в <div></div><p></p>
  */
-function deleteTextNodes(where) {
-}
+   function deleteTextNodes(where) {
+    
+
+    for (const elements of where.childNodes) {  
+        if (elements.nodeType === 3) {
+            elements.parentNode.removeChild(elements);
+        }
+      }
+    
+    }
 
 /*
  Задание 6 *:
@@ -108,8 +127,36 @@ function deleteTextNodes(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {
-}
+   function collectDOMStat(root) {
+    const obj = {
+      tags: {},
+      classes: {},
+      texts: 0
+  };
+  function scan(root) {
+      for (const elem of root.childNodes) {
+          if (elem.nodeType == Node.TEXT_NODE) {
+              obj.texts++;
+          } else if (elem.nodeType == Node.ELEMENT_NODE) {
+              if (elem.tagName in obj.tags) {
+                  obj.tags[elem.tagName]++;
+              } else {
+                  obj.tags[elem.tagName] = 1;
+              }
+              for (const className of elem.classList) {
+                  if (className in obj.classes) {
+                      obj.classes[className]++;
+                  } else {
+                      obj.classes[className] = 1;
+                  }
+              }
+              scan(elem);
+          }
+      }
+  }
+  scan(root);
+  return obj;
+  }
 
 export {
   createDivWithText,
