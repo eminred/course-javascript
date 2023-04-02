@@ -10,13 +10,13 @@ export default {
 
     const index = Math.round(Math.random() * (array.length -1));
 
-    return array(index);
+    return array[index];
   },
 
   async getNextPhoto() {
     const friend = this.getRandomElement(this.friends.items);
     const photos = await this.getFriendPhotos(friend.id);
-    const photo = this.getFriendPhotos(photos.items);
+    const photo = this.getRandomElement(photos.items);
     const size = this.findSize(photo);
 
     return {friend, id: photo.id, url: size.url};
@@ -69,18 +69,18 @@ export default {
     return new Promise((resolve) => VK.Auth.revokeGrants(resolve));
   },
 
-  callAPI(method, params) {
+  callApi(method, params) {
     params.v = params.v  || '5.131';
 
     return new Promise((resolve, reject) => {
         VK.api(method, params, (response) => {
             if (response.error) {
-                reject(response.error);
+                reject(new Error(response.error.error_msg));
             } else {
                 resolve(response.response);
             }
         });
-    })
+    });
   },
 
   getFriends () {
@@ -95,11 +95,11 @@ export default {
       owner_id: owner,
     };
 
-    return this.callApi('photo.getAll', params);
+    return this.callApi('photos.getAll', params);
   },
 
   async getFriendPhotos(id) {
-    const photos = this.photoCache(id);
+    let photos = this.photoCache[id];
 
     if (photos) {
       return photos;
