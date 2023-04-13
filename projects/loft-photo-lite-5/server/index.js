@@ -79,7 +79,7 @@ async function readBody(req) {
     }
 
     return new Promise((resolve) => {
-        let body = '';
+        let body = '{}';
         req
             .on('data', (chunk) => {
                 body += chunk;
@@ -107,7 +107,7 @@ async function getVKUser(token) {
             .on('error', reject)
     );
 
-    return body.response[0];
+    return body?.response?.[0];
 }
 
 async function getMe(token) {
